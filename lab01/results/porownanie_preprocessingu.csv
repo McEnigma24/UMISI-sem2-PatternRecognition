@@ -1,0 +1,28 @@
+preprocessing,cechy,metoda,parametry,val_accuracy,test_accuracy,test_f1
+oryginal,proste,regresja_logistyczna,{'C': 10000},0.7285714285714285,0.7476190476190476,0.7344557823129249
+oryginal,proste,kNN,"{'n_neighbors': 3, 'weights': 'distance'}",0.7333333333333333,0.719047619047619,0.6965986394557822
+oryginal,proste,drzewo_decyzyjne,"{'max_depth': None, 'criterion': 'gini'}",0.6333333333333333,0.6571428571428571,0.6521995464852607
+oryginal,wybrane,regresja_logistyczna,{'C': 1000},0.8428571428571429,0.9,0.8994557823129251
+oryginal,wybrane,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.819047619047619,0.8857142857142857,0.8749999999999999
+oryginal,wybrane,drzewo_decyzyjne,"{'max_depth': 15, 'criterion': 'entropy'}",0.7476190476190476,0.7857142857142857,0.7803968253968252
+oryginal,wszystkie,regresja_logistyczna,{'C': 1000},0.8714285714285714,0.9428571428571428,0.942312925170068
+oryginal,wszystkie,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.8523809523809524,0.8761904761904762,0.8639115646258502
+oryginal,wszystkie,drzewo_decyzyjne,"{'max_depth': 15, 'criterion': 'entropy'}",0.7666666666666667,0.7952380952380952,0.7875056689342402
+wycentrowane,proste,regresja_logistyczna,{'C': 10000},0.7285714285714285,0.7476190476190476,0.7344557823129249
+wycentrowane,proste,kNN,"{'n_neighbors': 3, 'weights': 'distance'}",0.7333333333333333,0.719047619047619,0.6965986394557822
+wycentrowane,proste,drzewo_decyzyjne,"{'max_depth': None, 'criterion': 'gini'}",0.6333333333333333,0.6571428571428571,0.6521995464852607
+wycentrowane,wybrane,regresja_logistyczna,{'C': 1000},0.8476190476190476,0.9,0.8994557823129251
+wycentrowane,wybrane,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.819047619047619,0.8857142857142857,0.8749999999999999
+wycentrowane,wybrane,drzewo_decyzyjne,"{'max_depth': 15, 'criterion': 'entropy'}",0.7476190476190476,0.7857142857142857,0.7803968253968252
+wycentrowane,wszystkie,regresja_logistyczna,{'C': 1000},0.8714285714285714,0.9380952380952381,0.938095238095238
+wycentrowane,wszystkie,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.8523809523809524,0.8761904761904762,0.8639115646258502
+wycentrowane,wszystkie,drzewo_decyzyjne,"{'max_depth': 15, 'criterion': 'entropy'}",0.7666666666666667,0.7952380952380952,0.7875056689342402
+wycentrowane_przeskalowane,proste,regresja_logistyczna,{'C': 10000},0.7428571428571429,0.7619047619047619,0.7467006802721087
+wycentrowane_przeskalowane,proste,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.7285714285714285,0.7619047619047619,0.7533560090702945
+wycentrowane_przeskalowane,proste,drzewo_decyzyjne,"{'max_depth': 20, 'criterion': 'gini'}",0.6571428571428571,0.7047619047619048,0.6792176870748298
+wycentrowane_przeskalowane,wybrane,regresja_logistyczna,{'C': 1000},0.8666666666666667,0.8809523809523809,0.8769387755102039
+wycentrowane_przeskalowane,wybrane,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.8333333333333334,0.8666666666666667,0.8571315192743763
+wycentrowane_przeskalowane,wybrane,drzewo_decyzyjne,"{'max_depth': 10, 'criterion': 'entropy'}",0.7238095238095238,0.7285714285714285,0.7151927437641722
+wycentrowane_przeskalowane,wszystkie,regresja_logistyczna,{'C': 1000},0.8714285714285714,0.9333333333333333,0.9328911564625851
+wycentrowane_przeskalowane,wszystkie,kNN,"{'n_neighbors': 1, 'weights': 'uniform'}",0.8761904761904762,0.9,0.8931632653061222
+wycentrowane_przeskalowane,wszystkie,drzewo_decyzyjne,"{'max_depth': 15, 'criterion': 'entropy'}",0.7523809523809524,0.7380952380952381,0.7351700680272106

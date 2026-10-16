@@ -22,6 +22,7 @@ from features import (
     COMPLEX_FEATURES,
     SIMPLE_FEATURES,
     aligned_mask,
+    asymmetry,
     complex_features,
     load_mask,
     min_area_rect,
@@ -29,6 +30,7 @@ from features import (
     principal_axes,
     region,
 )
+from preprocess import VARIANTS
 
 LAB_DIR = Path(__file__).resolve().parent.parent
 DATASET_DIR = LAB_DIR / "dataset"
@@ -43,8 +45,8 @@ OVERLAY_CLASSES = [
 ]
 
 
-def load_features(split: str) -> tuple[list[str], list[str], np.ndarray]:
-    with (FEATURES_DIR / f"features_{split}.csv").open() as f:
+def load_features(split: str, variant: str = "oryginal") -> tuple[list[str], list[str], np.ndarray]:
+    with (FEATURES_DIR / variant / f"features_{split}.csv").open() as f:
         rows = list(csv.DictReader(f))
     files = [r["file"] for r in rows]
     labels = [r["label"] for r in rows]
@@ -161,7 +163,8 @@ def plot_symmetry(files: list[str], labels: list[str]) -> Path:
     fig, axes = plt.subplots(3, 4, figsize=(16, 12))
     axes = axes.ravel()
     for i, file, mask in overlay_examples(files, labels):
-        aligned = aligned_mask(mask, region(mask))
+        soft = aligned_mask(mask, region(mask))
+        aligned = soft > 0.5
         mirrored = np.flipud(aligned)
         rgb = np.ones((*aligned.shape, 3))
         rgb[aligned & mirrored] = (0.55, 0.55, 0.55)
@@ -169,8 +172,7 @@ def plot_symmetry(files: list[str], labels: list[str]) -> Path:
         rgb[~aligned & mirrored] = (0.15, 0.4, 0.85)
         axes[i].imshow(rgb)
         axes[i].axhline((aligned.shape[0] - 1) / 2, color="black", lw=1)
-        axes[i].set_title(f"{file}\nasymmetry_major = {1 - (aligned & mirrored).sum() / aligned.sum():.2f}",
-                          fontsize=9)
+        axes[i].set_title(f"{file}\nasymmetry_major = {asymmetry(soft, np.flipud):.2f}", fontsize=9)
         axes[i].axis("off")
 
     handles = [
@@ -251,6 +253,50 @@ def plot_pca(labels: list[str], X: np.ndarray, names: list[str], title: str, fil
     return save(fig, filename, dpi=100)
 
 
+def plot_preprocessing(files: list[str], labels: list[str]) -> Path:
+    classes = ["apple", "Bone", "pocket", "spoon", "fish", "elephant"]
+    titles = {
+        "oryginal": "oryginał",
+        "wycentrowane": "wycentrowane",
+        "wycentrowane_przeskalowane": "wycentrowane + przeskalowane",
+    }
+    masks = {}
+    for cls in classes:
+        file = files[labels.index(cls)]
+        mask = load_mask(DATASET_DIR / SPLIT / cls / file)
+        masks[file] = {v: fn(mask) for v, fn in VARIANTS.items()}
+    # common pixel scale in the first two rows, so differences in object size stay visible
+    extent = max(max(m["oryginal"].shape + m["wycentrowane"].shape) for m in masks.values())
+
+    fig, axes = plt.subplots(len(VARIANTS), len(classes), figsize=(3.2 * len(classes), 3.4 * len(VARIANTS)))
+    for col, (file, variants) in enumerate(masks.items()):
+        for row, (variant, mask) in enumerate(variants.items()):
+            ax = axes[row, col]
+            h, w = mask.shape
+            ax.imshow(mask, cmap="gray_r", extent=(0, w, h, 0))
+            cy, cx = region(mask).centroid
+            ax.plot(cx + 0.5, cy + 0.5, "r+", ms=14, mew=2)
+            if variant != "oryginal":
+                ax.axhline(h / 2, color="tab:blue", lw=0.8, ls=":")
+                ax.axvline(w / 2, color="tab:blue", lw=0.8, ls=":")
+            ax.add_patch(Rectangle((0, 0), w, h, fill=False, ec="tab:gray", lw=1))
+            if variant == "wycentrowane_przeskalowane":
+                ax.set_xlim(-5, w + 5)
+                ax.set_ylim(h + 5, -5)
+            else:
+                ax.set_xlim(-5, extent + 5)
+                ax.set_ylim(extent + 5, -5)
+            ax.set_title(f"{file}  {h}×{w}" if row == 0 else f"{h}×{w}  pole={mask.sum()}", fontsize=9)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            if col == 0:
+                ax.set_ylabel(titles[variant], fontsize=11)
+    fig.suptitle("Preprocessing: czerwony + = środek ciężkości, niebieskie linie = środek obrazu "
+                 "(dwa górne wiersze w tej samej skali pikseli)", fontsize=12)
+    fig.tight_layout(rect=(0, 0, 1, 0.96))
+    return save(fig, "13_preprocessing_przyklady.png")
+
+
 def quick_knn(labels: list[str], X: np.ndarray) -> None:
     _, val_labels, X_val = load_features(VAL_SPLIT)
     print("\nSzybki test kNN (k=1) na walidacji:")
@@ -279,6 +325,7 @@ def main() -> None:
         plot_correlation(X),
         plot_pca(labels, X, SIMPLE_FEATURES, "cechy proste", "7_pca_proste.png"),
         plot_pca(labels, X, COMPLEX_FEATURES, "cechy złożone", "8_pca_zlozone.png"),
+        plot_preprocessing(files, labels),
     ]
     for out in outputs:
         print(f"-> {out.relative_to(LAB_DIR)}")

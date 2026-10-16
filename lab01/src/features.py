@@ -99,12 +99,14 @@ def aligned_mask(mask: np.ndarray, props) -> np.ndarray:
     # output (row, col) -> input: rows walk along the minor axis, cols along the major axis
     matrix = np.column_stack([minor, major])
     offset = np.array(props.centroid) - matrix @ [center, center]
-    return ndimage.affine_transform(mask.astype(np.uint8), matrix, offset, (size, size), order=0) > 0
+    # bilinear, not nearest: with axis-aligned shapes and a centroid on a half pixel, nearest
+    # sampling hits exact ties and float noise shifts the whole mirror image by one pixel
+    return ndimage.affine_transform(mask.astype(np.float64), matrix, offset, (size, size), order=1)
 
 
 def asymmetry(aligned: np.ndarray, flip) -> float:
     """Share of the object that does not overlap its mirror image: 0 = perfectly symmetric."""
-    return 1.0 - (aligned & flip(aligned)).sum() / aligned.sum()
+    return 1.0 - np.minimum(aligned, flip(aligned)).sum() / aligned.sum()
 
 
 def complex_features(mask: np.ndarray) -> dict[str, float]:

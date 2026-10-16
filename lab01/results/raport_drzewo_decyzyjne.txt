@@ -1,0 +1,79 @@
+drzewo_decyzyjne, parametry: {'max_depth': 15, 'criterion': 'entropy'}
+cechy: eccentricity, aspect_ratio, rectangularity, solidity, radius_cv, radius_mean_max_ratio, radius_min_max_ratio, asymmetry_major, asymmetry_minor, compactness, equivalent_diameter
+
+                precision    recall  f1-score   support
+
+          Bone      0.750     1.000     0.857         3
+         Comma      1.000     1.000     1.000         3
+          Glas      1.000     0.333     0.500         3
+       HCircle      1.000     0.667     0.800         3
+         Heart      1.000     0.667     0.800         3
+          Misk      0.600     1.000     0.750         3
+         apple      1.000     1.000     1.000         3
+           bat      0.750     1.000     0.857         3
+        beetle      1.000     1.000     1.000         3
+          bell      1.000     1.000     1.000         3
+          bird      0.500     0.333     0.400         3
+        bottle      1.000     1.000     1.000         3
+         brick      1.000     1.000     1.000         3
+     butterfly      1.000     1.000     1.000         3
+         camel      0.500     0.333     0.400         3
+           car      1.000     1.000     1.000         3
+      carriage      1.000     1.000     1.000         3
+        cattle      1.000     1.000     1.000         3
+cellular_phone      0.500     0.667     0.571         3
+       chicken      1.000     1.000     1.000         3
+      children      0.750     1.000     0.857         3
+       chopper      0.667     0.667     0.667         3
+       classic      0.750     1.000     0.857         3
+         crown      0.500     0.667     0.571         3
+           cup      0.200     0.333     0.250         3
+          deer      1.000     1.000     1.000         3
+       device0      1.000     1.000     1.000         3
+       device1      1.000     1.000     1.000         3
+       device2      0.600     1.000     0.750         3
+       device3      1.000     1.000     1.000         3
+       device4      1.000     0.333     0.500         3
+       device5      0.000     0.000     0.000         3
+       device6      0.667     0.667     0.667         3
+       device7      1.000     1.000     1.000         3
+       device8      0.500     1.000     0.667         3
+       device9      1.000     1.000     1.000         3
+           dog      0.667     0.667     0.667         3
+      elephant      0.500     0.333     0.400         3
+          face      0.750     1.000     0.857         3
+          fish      1.000     0.333     0.500         3
+      flatfish      1.000     0.667     0.800         3
+           fly      0.500     1.000     0.667         3
+          fork      0.750     1.000     0.857         3
+      fountain      1.000     1.000     1.000         3
+          frog      1.000     0.667     0.800         3
+        guitar      1.000     1.000     1.000         3
+        hammer      1.000     1.000     1.000         3
+           hat      1.000     0.333     0.500         3
+         horse      1.000     0.667     0.800         3
+     horseshoe      0.667     0.667     0.667         3
+           jar      1.000     1.000     1.000         3
+           key      1.000     1.000     1.000         3
+       lizzard      1.000     0.333     0.500         3
+        lmfish      0.667     0.667     0.667         3
+       octopus      0.333     0.667     0.444         3
+        pencil      1.000     1.000     1.000         3
+  personal_car      1.000     0.667     0.800         3
+        pocket      1.000     0.667     0.800         3
+           rat      1.000     0.667     0.800         3
+           ray      1.000     1.000     1.000         3
+     sea_snake      0.667     0.667     0.667         3
+          shoe      1.000     0.667     0.800         3
+         spoon      1.000     1.000     1.000         3
+        spring      0.750     1.000     0.857         3
+          stef      1.000     1.000     1.000         3
+         teddy      1.000     0.667     0.800         3
+          tree      0.500     0.333     0.400         3
+         truck      1.000     1.000     1.000         3
+        turtle      0.250     0.333     0.286         3
+         watch      0.500     0.667     0.571         3
+
+      accuracy                          0.786       210
+     macro avg      0.825     0.786     0.780       210
+  weighted avg      0.825     0.786     0.780       210
