@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from features import SIMPLE_FEATURES, label_from_filename, load_mask, simple_features
+from features import ALL_FEATURES, all_features, label_from_filename, load_mask
 
 LAB_DIR = Path(__file__).resolve().parent.parent
 DATASET_DIR = LAB_DIR / "dataset"
@@ -13,7 +13,7 @@ def compute_split(split: str) -> list[dict]:
     rows = []
     for path in sorted((DATASET_DIR / split).rglob("*.gif")):
         row = {"file": path.name, "label": label_from_filename(path)}
-        row.update(simple_features(load_mask(path)))
+        row.update(all_features(load_mask(path)))
         rows.append(row)
     return rows
 
@@ -21,7 +21,7 @@ def compute_split(split: str) -> list[dict]:
 def save_csv(rows: list[dict], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["file", "label", *SIMPLE_FEATURES])
+        writer = csv.DictWriter(f, fieldnames=["file", "label", *ALL_FEATURES])
         writer.writeheader()
         writer.writerows(rows)
 
@@ -29,7 +29,7 @@ def save_csv(rows: list[dict], path: Path) -> None:
 def main() -> None:
     for split in SPLITS:
         rows = compute_split(split)
-        out = FEATURES_DIR / f"simple_{split}.csv"
+        out = FEATURES_DIR / f"features_{split}.csv"
         save_csv(rows, out)
         print(f"{split}: {len(rows)} obrazów -> {out.relative_to(LAB_DIR)}")
 
