@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+dataset/
+dataset_przetworzone/
+masks/
+features/
+plots/
+results/
+uv.lock

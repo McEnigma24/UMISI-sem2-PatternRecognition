@@ -1,0 +1,13 @@
+drzewo_decyzyjne, cechy=pelne, parametry: {'max_depth': 20, 'criterion': 'gini'}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      0.929     1.000     0.963        13
+   brown_bread      1.000     0.692     0.818        13
+      corduroy      0.533     0.615     0.571        13
+        cotton      0.667     0.769     0.714        13
+     styrofoam      0.917     0.846     0.880        13
+
+      accuracy                          0.785        65
+     macro avg      0.809     0.785     0.789        65
+  weighted avg      0.809     0.785     0.789        65

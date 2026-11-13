@@ -1,0 +1,13 @@
+kNN, cechy=minimalne, parametry: {'n_neighbors': 9, 'weights': 'distance'}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      1.000     1.000     1.000        13
+   brown_bread      0.562     0.692     0.621        13
+      corduroy      0.300     0.231     0.261        13
+        cotton      0.467     0.538     0.500        13
+     styrofoam      0.727     0.615     0.667        13
+
+      accuracy                          0.615        65
+     macro avg      0.611     0.615     0.610        65
+  weighted avg      0.611     0.615     0.610        65

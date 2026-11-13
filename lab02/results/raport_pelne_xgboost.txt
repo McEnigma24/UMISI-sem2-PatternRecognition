@@ -1,0 +1,13 @@
+xgboost, cechy=pelne, parametry: {'max_depth': 10, 'learning_rate': 0.1, 'n_estimators': 200}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      1.000     1.000     1.000        13
+   brown_bread      0.692     0.692     0.692        13
+      corduroy      0.538     0.538     0.538        13
+        cotton      0.769     0.769     0.769        13
+     styrofoam      0.923     0.923     0.923        13
+
+      accuracy                          0.785        65
+     macro avg      0.785     0.785     0.785        65
+  weighted avg      0.785     0.785     0.785        65

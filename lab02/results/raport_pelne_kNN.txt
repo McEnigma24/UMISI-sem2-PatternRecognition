@@ -1,0 +1,13 @@
+kNN, cechy=pelne, parametry: {'n_neighbors': 9, 'weights': 'distance'}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      1.000     1.000     1.000        13
+   brown_bread      0.846     0.846     0.846        13
+      corduroy      0.571     0.615     0.593        13
+        cotton      0.778     0.538     0.636        13
+     styrofoam      0.750     0.923     0.828        13
+
+      accuracy                          0.785        65
+     macro avg      0.789     0.785     0.781        65
+  weighted avg      0.789     0.785     0.781        65

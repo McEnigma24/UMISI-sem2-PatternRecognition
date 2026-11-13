@@ -1,0 +1,28 @@
+Lab04 — BDD100K (obrazy 10k, etykiety detekcji 100k)
+
+Parowanie: split wg folderu etykiet (train/val/test).
+Obrazy z etykietami: 4260 (train 2976, val 454, test 830).
+Folder images/10k/val bez etykiet: 1000 obrazów (pominięte).
+Obiekty docelowe (ramki): 26307.
+
+Klasy (n):
+  traffic_sign: 15565
+  traffic_light_red: 1775
+  traffic_light_yellow: 223
+  traffic_light_green: 3704
+  traffic_light_unknown: 5040
+
+Udział occluded: 9.8%, truncated: 3.0%.
+Udział traffic_light_unknown wśród wszystkich obiektów: 19.2%.
+
+Wyjątki etykiet (anomalie.csv): 3615 wpisów.
+Nieczytelne obrazy: 0.
+Nietypowa rozdzielczość: 0 (oczekiwane 1280x720).
+Podejrzana zgodność timeofday vs jasność: 8.
+
+Wnioski:
+- Zbiór jest mocno niezbalansowany (znaki >> światła; mało yellow).
+- Sygnalizatory skupiają się w górnej części kadru — sensowny prior dla klasycznego detektora.
+- Trudne warunki (noc, deszcz, mgła) są reprezentowane, ale rzadziej niż dzień/clear.
+- Artefakt: średni obraz (plots/6_sredni_obraz.png) ujawnia maskę/deskę rozdzielczą u dołu kadru.
+- Małe i obcięte ramki oraz unknown koloru wymagają ostrożności przy metrykach IoU i klasyfikacji koloru.

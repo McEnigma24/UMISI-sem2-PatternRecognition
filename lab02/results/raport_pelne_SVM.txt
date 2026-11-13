@@ -1,0 +1,13 @@
+SVM, cechy=pelne, parametry: {'C': 100, 'kernel': 'rbf', 'gamma': 'scale'}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      1.000     1.000     1.000        13
+   brown_bread      1.000     0.846     0.917        13
+      corduroy      0.667     0.769     0.714        13
+        cotton      0.786     0.846     0.815        13
+     styrofoam      1.000     0.923     0.960        13
+
+      accuracy                          0.877        65
+     macro avg      0.890     0.877     0.881        65
+  weighted avg      0.890     0.877     0.881        65

@@ -1,0 +1,14 @@
+1. Wczytaj i przeanalizuj wybrany dataset (każda grupa inny)
+2. Dokonaj niezbędnego preprocessingu zdjęć np. usunięcia artefaktów, segmentacji
+obiektu od tła, poprawy jasności i kolorów.
+3. Wyznacz cechy z obiektu, które Twoim zdaniem pozwolą na jego klasyfikację np.
+macierze tekstur, deskryptory kształtu lub inne.
+4. Wykonaj klasyfikację obrazu metodami klasycznymi (np. drzewa decyzyjne, SVM) -
+nie trenuj sieci neuronowych.
+5. Dobierz parametry tak, aby maksymalizować wynik na całym zbiorze danych (podział
+train / validation)
+6. Wylicz i krytycznie przeanalizuj metryki skuteczności na osobnym zbiorze testowym.
+Zbiory danych
+A) Klasyfikacja jabłek od pomidorów
+• Jedno trudne zadanie
+• Mały, bardzo zróżnicowany zbiór

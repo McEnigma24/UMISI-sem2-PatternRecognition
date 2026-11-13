@@ -1,0 +1,13 @@
+regresja_logistyczna, cechy=minimalne, parametry: {'C': 1000}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      0.647     0.846     0.733        13
+   brown_bread      0.333     0.462     0.387        13
+      corduroy      0.250     0.308     0.276        13
+        cotton      0.000     0.000     0.000        13
+     styrofoam      0.500     0.462     0.480        13
+
+      accuracy                          0.415        65
+     macro avg      0.346     0.415     0.375        65
+  weighted avg      0.346     0.415     0.375        65

@@ -1,0 +1,13 @@
+xgboost, cechy=minimalne, parametry: {'max_depth': 6, 'learning_rate': 0.1, 'n_estimators': 200}
+
+                precision    recall  f1-score   support
+
+aluminium_foil      1.000     0.923     0.960        13
+   brown_bread      0.308     0.308     0.308        13
+      corduroy      0.250     0.231     0.240        13
+        cotton      0.438     0.538     0.483        13
+     styrofoam      0.583     0.538     0.560        13
+
+      accuracy                          0.508        65
+     macro avg      0.516     0.508     0.510        65
+  weighted avg      0.516     0.508     0.510        65
