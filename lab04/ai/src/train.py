@@ -8,8 +8,10 @@ Zawieszony rank: `kill -USR1 <pid>` → stack na stderr.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
+import signal
 import subprocess
 import sys
 from datetime import datetime, timedelta
@@ -53,7 +55,16 @@ def launch_job(*, phase: str, source: str, tensorboard_dir: str, preset: dict) -
     }
     job_path = save_dir / "job.json"
     job_path.write_text(json.dumps(job, indent=2) + "\n")
-    rc = subprocess.call([sys.executable, str(Path(__file__).resolve()), str(job_path)])
+    proc = subprocess.Popen(
+        [sys.executable, str(Path(__file__).resolve()), str(job_path)],
+        start_new_session=True,
+    )
+    try:
+        rc = proc.wait()
+    finally:
+        # rank 1 DDP przeżywa OOM-kill ranku 0 i spamuje TCPStore — sprzątamy całą grupę
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGKILL)
     if rc != 0:
         raise RuntimeError(f"Trening {preset['architecture']} zakończony kodem {rc} ({save_dir})")
     return save_dir
@@ -149,14 +160,26 @@ def run_training(
 
     train_ds = BddSegDataset("train", augment=True, max_images=max_train_images)
     val_ds = BddSegDataset("val", augment=False, max_images=max_val_images)
-    loader_kw = dict(
+    train_loader = DataLoader(
+        train_ds,
         batch_size=batch_size,
+        shuffle=True,
+        drop_last=True,
         num_workers=num_workers,
         pin_memory=True,
         persistent_workers=num_workers > 0,
+        prefetch_factor=2 if num_workers > 0 else None,
     )
-    train_loader = DataLoader(train_ds, shuffle=True, drop_last=True, **loader_kw)
-    val_loader = DataLoader(val_ds, shuffle=False, **loader_kw)
+    val_workers = 1 if num_workers > 0 else 0
+    val_loader = DataLoader(
+        val_ds,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=val_workers,
+        pin_memory=True,
+        persistent_workers=False,
+        prefetch_factor=2 if val_workers > 0 else None,
+    )
 
     steps_per_epoch = max(1, len(train_ds) // (batch_size * devices))
     total_steps = steps_per_epoch * epochs

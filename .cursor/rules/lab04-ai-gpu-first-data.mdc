@@ -1,0 +1,20 @@
+---
+description: lab04/ai — ograniczony RAM WSL; dane na GPU jak najwcześniej
+alwaysApply: true
+---
+
+# lab04/ai: GPU-first data, mało RAM hosta (MUST)
+
+**MUST:** DataLoader zwraca lekkie tensory (**uint8** obraz, **uint8** maska). Normalizacja `/255`, ImageNet mean/std i augmentacje fotometryczne / flip — na **GPU** (`on_after_batch_transfer` w `LitSegModule` lub równoważnie).
+
+**MUST NOT:** cache całego datasetu w RAM; duże `num_workers` + duży `prefetch_factor` na WSL (~10 GB RAM VM).
+
+**MUST:** `num_workers` ≤ 2 na rank (preset FULL i SMOKE); val loader bez `persistent_workers`; `prefetch_factor` ≤ 2.
+
+**MUST:** inferencja — `uint8` → `.to(device)` → dopiero `float() / 255` (nie trzymać floatowych kopii na CPU).
+
+**MUST:** proces `main.py` nie inicjalizuje CUDA tylko po to, by wypisać nazwy GPU (użyj `nvidia-smi` / env).
+
+**MUST:** `launch_job` w `train.py` uruchamia trening w **nowej sesji** (`start_new_session=True`) i po błędzie zabija **całą grupę procesów** (`os.killpg`), żeby nie zostawały osierocone ranki DDP.
+
+**SHOULD:** YOLO — bez cache datasetu w RAM; ewentualnie disk cache ultralytics.

@@ -44,12 +44,13 @@ def load_run_model(run_dir: Path) -> tuple[SegArchitecture, object]:
 
 def predict_image(adapter: SegArchitecture, model, bgr: np.ndarray):
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-    t = torch.from_numpy(rgb).permute(2, 0, 1).float().unsqueeze(0) / 255.0
     h, w = rgb.shape[:2]
+    device = _device()
+    t = torch.from_numpy(rgb).to(device).permute(2, 0, 1).float().unsqueeze(0).div_(255.0)
     if adapter.owns_training_loop:
-        return adapter.predict(model, t)[0]
-    with torch.autocast(_device().type, dtype=torch.bfloat16, enabled=_device().type == "cuda"):
-        pred = adapter.predict(model, _pad_to_32(t.to(_device())))[0]
+        return adapter.predict(model, t.cpu())[0]
+    with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
+        pred = adapter.predict(model, _pad_to_32(t))[0]
     pred.semantic = pred.semantic[:h, :w]
     for inst in pred.instances:
         inst.mask = inst.mask[:h, :w]

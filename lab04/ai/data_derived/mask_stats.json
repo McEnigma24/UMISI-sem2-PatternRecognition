@@ -1,12 +1,12 @@
 {
-  "hsv_lamp": 2,
-  "positional_lamp": 16,
-  "signs": 21,
-  "housing_only": 6,
-  "processed": 8,
+  "hsv_lamp": 100942,
+  "positional_lamp": 82405,
+  "signs": 342620,
+  "housing_only": 81683,
+  "processed": 99620,
   "masks_on_disk": {
-    "train": 300,
-    "val": 80,
-    "test": 8
+    "train": 70000,
+    "val": 10000,
+    "test": 20000
   }
 }

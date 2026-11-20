@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-import torch
+import subprocess
 
 from _utils_.log_print import log_print, reset_log_timer, tensorboard_run_dir
 from _utils_.run_paths import project_root, resolve_evaluation_dir
@@ -41,11 +41,19 @@ def init_session(when: datetime | None = None) -> str:
         os.environ.get("TENSORBOARD_LOGDIR", str(project_root() / "runs")),
         when,
     )
-    if not torch.cuda.is_available():
-        log_print("UWAGA: CUDA niedostępne — trening na CPU")
-    else:
-        names = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
-        log_print(f"GPU: {len(names)}x {names}")
+    try:
+        out = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        names = [ln.strip() for ln in out.splitlines() if ln.strip()]
+        if names:
+            log_print(f"GPU: {len(names)}x {names}")
+        else:
+            log_print("UWAGA: nvidia-smi bez GPU — trening może iść na CPU")
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        log_print("UWAGA: brak nvidia-smi / CUDA — trening na CPU")
     log_print(f"TensorBoard logi: {tb}")
     return tb
 

@@ -8,6 +8,7 @@ import torch.nn as nn
 from torchmetrics.classification import MulticlassJaccardIndex
 
 from classes import CLASS_NAMES, NUM_CLASSES
+from lit.gpu_augment import gpu_train_augment
 from lit.optim import warmup_cosine_scheduler
 from models.base import SegArchitecture
 
@@ -40,6 +41,13 @@ class LitSegModule(pl.LightningModule):
 
     def forward(self, x):
         return self.adapter.forward_logits(self.model, x)
+
+    def on_after_batch_transfer(self, batch, dataloader_idx):
+        batch["image"] = batch["image"].float().div_(255.0)
+        batch["mask"] = batch["mask"].long()
+        if self.training:
+            batch["image"], batch["mask"] = gpu_train_augment(batch["image"], batch["mask"])
+        return batch
 
     def _step(self, batch, stage: str):
         out = self.adapter.training_step_loss(self.model, batch, self.criterion)
