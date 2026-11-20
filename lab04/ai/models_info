@@ -1,0 +1,5 @@
+Architektura,Warianty (od najmniejszego do największego),Liczba parametrów,Złoty środek na start
+SegFormer,"B0, B1, B2, B3, B4, B5","3,7M (B0) – 84,7M (B5)","B1 (13,7M) lub B2 (27,5M)"
+Mask2Former,"ResNet-50 / Swin-T, Swin-S, Swin-B, Swin-L",44M (R50/Swin-T) – 215M (Swin-L),Swin-T (~47M)
+U-Net++ (SMP),"Zależy od enkodera: EfficientNet-B0, ResNet-34, ConvNeXt-Tiny/Small",~8M (EffNet-B0) – ~60M (ConvNeXt-S),ConvNeXt-Tiny (~35M)
+YOLO11-seg / v8-seg,"n (nano), s (small), m (medium), l (large), x (xlarge)",~3M (n) – ~65M (x),s (~10M) lub m (~22M)

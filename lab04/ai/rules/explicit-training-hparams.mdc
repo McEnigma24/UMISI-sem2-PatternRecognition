@@ -1,0 +1,25 @@
+---
+description: Ważne hparamy treningu — bez domyślnych wartości w kodzie; źródło prawdy to presety
+globs: src/**/*.py
+alwaysApply: false
+---
+
+# Jawne hyperparametry treningu
+
+Parametry wpływające na trening (checkpoint_every, eval_every, time_budget, batch, LR, precision, seq_len, epochs cap itd.) **nie mają domyślnych wartości** w callbackach, trainerze ani podobnych miejscach — muszą być podane przy tworzeniu obiektu.
+
+- **Źródło prawdy**: `src/training_presets.py` (np. `_DUAL3060_BASE`, `DUAL3060_ALL`), `src/finetune_presets.py` (`_CLS_BASE`, `FINETUNE_ALL`) oraz jawne argumenty `train.main(...)` / `finetune.main(...)`.
+- **Wyjątki**: parametry czysto techniczne bez wpływu na eksperyment (np. `resume_best_eval=float("inf")` gdy brak resume, opcjonalny `metrics_save_dir=None` gdy bez CSV).
+- **Nowy preset / ścieżka treningu**: dopisz pola do presetu; nie dodawaj „wygodnego” defaultu w `lit/` ani w `Trainer`, żeby nie ucichło brakujące pole.
+
+## Checkpointy epok (`checkpoints/epoch_*.pt`)
+
+- **W trakcie treningu**: częstość z `checkpoint_every` w presecie (DUAL3060: co epokę), bez kasowania w locie.
+- **Po `trainn`**: `compact_epoch_checkpoints` — jeden przebieg; **usuń** tylko gdy epoka nie należy do reguły **mod** i nie należy do **tail** (unia = zostaje). Bez dwóch faz „najpierw mod potem tail”. `best_eval` / `final` bez zmian.
+
+## Fine-tuning klasyfikacji (`finetune.main`)
+
+- Pola batch/LR jak w LM: `batch_size` (na kartę, int), `baseline_batch_size`, `baseline_learning_rate`, `lr_scaling`, `learning_rate_max`, `lightning_devices`, `precision`. LR liczone w `lit.optim.scaled_learning_rate` z globalnego batcha (`batch_size * lightning_devices`).
+- Klasyfikacja: `source`, `finetune_mode` (`full` | `unfreeze_last` | `lora`), `max_len`, `max_train_examples`, `max_val_examples`, `max_test_examples` (`0` = pełny split HF, jak `max_corpus_chars` przy LM), `pooling`, `head_hidden`, `head_dropout`, `warmup_ratio`, `weight_decay`, `inference_bench_examples`. Checkpoint co epokę: `checkpoints/epoch_XXXX.pt` (same wagi).
+- Tryb `lora`: jawne `lora_r`, `lora_alpha`, `lora_dropout`. Tryb `unfreeze_last`: jawne `unfreeze_last_n`. `scratch`: jawne wymiary modelu (`embed_dim`, `hidden_size`, `num_layers`, …) i tylko `finetune_mode=full`.
+- Best checkpoint klasyfikacji wybierany po `val/f1_macro` (`ClsRunLogCallback`), nie po loss.

@@ -1,0 +1,12 @@
+./normal_process_start.sh       # main.py w Dockerze (smoke = aktywne wpisy SMOKE w presetach)
+./background_process_start.sh   # main.py w tle (FULL)
+./background_process_tail.sh
+./background_process_cancel.sh
+./shell.sh                      # kontener dev
+./scripts/drun sync
+./scripts/drun verify
+
+# Maski ręcznie (main robi to sam):
+#   python src/data/prepare.py --limit N
+
+# TensorBoard (w shellu): tb

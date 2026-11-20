@@ -1,0 +1,19 @@
+---
+description: lab04/ai — smoke test (dry run) MUSI iść przez zwykły main.py uruchamiany przez normal_process_start.sh, z okrojonymi presetami
+alwaysApply: true
+---
+
+# lab04/ai: smoke test = zwykły `main.py` (MUST)
+
+**MUST:** smoke test / dry run uruchamiasz **wyłącznie** tak:
+
+```bash
+cd lab04/ai && ./normal_process_start.sh   # -> ./shell.sh ./start.sh -> Docker (GPU) -> src/main.py
+```
+
+- **MUST NOT:** tworzyć osobnych skryptów smoke (`smoke_test.py`, `scripts/smoke_*.sh`), zmiennych typu `SEG_SMOKE`, ani odpalać treningu na hoście przez `uv run` / `.venv` z pominięciem Dockera.
+- **MUST:** smoke różni się od pełnego treningu **tylko presetami**: w `src/finetune_presets.py` (`FINETUNE_ALL`) i `src/training_presets.py` (`SCRATCH_ALL`) aktywne są wpisy `{**FT_X, **_SEG_SMOKE}`, a wpisy FULL są zakomentowane (i odwrotnie przy pełnym treningu). Kod `main.py` / `train.py` (wspólna pętla treningu) jest ten sam.
+- **MUST:** `_SEG_SMOKE` = okrojony zbiór (`max_train_images`, `max_val_images`, `eval_*_images` rzędu kilkunastu obrazów), `epochs=1`, `lightning_devices=2` (ta sama ścieżka DDP co FULL). Smoke obejmuje **wszystkie architektury** z obu list.
+- **MUST:** cały smoke (wszystkie modele, fine-tune + od zera + ewaluacja) mieści się w **≤ 15 min**. Smoke sprawdza tylko, czy pipeline działa: maski, zapis do `saved_models/{finetuned,pretrained/from_scratch}/<arch>/<run>/`, checkpointy, `metrics.csv`, ewaluacja i porównanie w `model_evaluations/`. Jakość modelu nie ma znaczenia.
+- Długie runy (FULL) odpala użytkownik przez `./background_process_start.sh`; agent nie startuje FULL bez wyraźnej prośby.
+- Przed smoke'iem sprawdź `nvidia-smi` (GPU wolne); w trakcie potwierdź, że proces jest w kontenerze `lab04_seg-dev-run-*` i używa obu GPU.

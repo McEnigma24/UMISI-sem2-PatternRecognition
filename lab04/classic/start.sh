@@ -6,3 +6,4 @@ uv sync
 uv run python src/dataset.py --build-index
 uv run python src/analyze_dataset.py
 uv run python src/visualize.py
+uv run python src/run_traffic_lights.py

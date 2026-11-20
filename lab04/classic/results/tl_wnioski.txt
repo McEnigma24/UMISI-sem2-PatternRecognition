@@ -1,0 +1,10 @@
+Lab04 zadanie 3 — detekcja sygnalizatorów
+
+Wybrany wariant (najwyższy F1 na val): M1
+
+M1: P=0.004 R=0.001 F1=0.001 color_acc=0.429
+M2: P=0.004 R=0.000 F1=0.001 color_acc=0.333
+M1+M2: P=0.004 R=0.001 F1=0.001 color_acc=0.429
+M1+M2+M3: P=0.000 R=0.000 F1=0.000 color_acc=0.000
+
+Parametry: roi_y=0.62, s_min=90, v_min=130

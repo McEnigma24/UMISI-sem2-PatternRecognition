@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Interaktywna powłoka dev (trwały kontener) albo jednorazowe polecenie w kontenerze.
+#
+#   ./shell.sh
+#   ./shell.sh bash ./start.sh
+#   ./shell.sh uv run python src/main.py
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+# shellcheck source=scripts/_compose_env.sh
+source "${ROOT}/scripts/_compose_env.sh"
+
+_normalize_container_argv() {
+  if [[ $# -eq 1 && "$1" == *" "* ]]; then
+    local -a split
+    read -r -a split <<<"$1"
+    set -- "${split[@]}"
+  fi
+}
+
+_docker_exec_in_shell() {
+  local -a exec_flags=(-w /workspace)
+  if [[ -t 0 && -t 1 ]]; then
+    exec_flags+=(-it)
+  fi
+  docker exec "${exec_flags[@]}" -u "${HOST_USER}" "${SHELL_CONTAINER_NAME}" "$@"
+}
+
+_run_in_container() {
+  if docker ps --format '{{.Names}}' | grep -qx "${SHELL_CONTAINER_NAME}"; then
+    docker exec -u "${HOST_USER}" "${SHELL_CONTAINER_NAME}" bash -lc 'cd /workspace && uv sync'
+    _docker_exec_in_shell "$@"
+    return
+  fi
+  if [[ "$GPU_OK" -ne 1 ]]; then
+    echo "[dsh] GPU niedostępne — kontener bez CUDA (ML_TEMPLATE_GPU=0)" >&2
+  fi
+  local -a run_flags=(run --rm)
+  if [[ -t 0 && -t 1 ]]; then
+    run_flags+=(--service-ports)
+  fi
+  "${COMPOSE[@]}" "${run_flags[@]}" dev "$@"
+}
+
+if [[ $# -gt 0 ]]; then
+  _normalize_container_argv "$@"
+  _run_in_container "$@"
+  exit $?
+fi
+
+if docker ps --format '{{.Names}}' | grep -qx "${SHELL_CONTAINER_NAME}"; then
+  docker exec -u "${HOST_USER}" "${SHELL_CONTAINER_NAME}" bash -lc 'cd /workspace && uv sync'
+  exec docker exec -it -u "${HOST_USER}" "${SHELL_CONTAINER_NAME}" bash --rcfile /workspace/docker/shell_init.sh
+fi
+
+exec "${COMPOSE[@]}" run --rm --service-ports --name "${SHELL_CONTAINER_NAME}" dev bash
