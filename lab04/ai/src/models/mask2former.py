@@ -19,15 +19,14 @@ class Mask2FormerAdapter(SegArchitecture):
 
     def build(self, *, source: str, num_classes: int = NUM_CLASSES, **hp) -> nn.Module:
         self.aux_weight = float(hp["aux_dice_focal_weight"])
+        cfg = Mask2FormerConfig.from_pretrained(HF_ID, num_labels=num_classes, **label_maps())
         if source == "scratch":
-            cfg = Mask2FormerConfig.from_pretrained(HF_ID, num_labels=num_classes, **label_maps())
             cfg.use_pretrained_backbone = False
             return Mask2FormerForUniversalSegmentation(cfg)
         return Mask2FormerForUniversalSegmentation.from_pretrained(
             HF_ID,
-            num_labels=num_classes,
+            config=cfg,
             ignore_mismatched_sizes=True,
-            **label_maps(),
         )
 
     @staticmethod

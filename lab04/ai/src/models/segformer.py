@@ -20,14 +20,13 @@ class SegFormerAdapter(SegArchitecture):
     name = "segformer_b2"
 
     def build(self, *, source: str, num_classes: int = NUM_CLASSES, **hp) -> nn.Module:
+        cfg = SegformerConfig.from_pretrained(HF_ID, num_labels=num_classes, **label_maps())
         if source == "scratch":
-            cfg = SegformerConfig.from_pretrained(HF_ID, num_labels=num_classes, **label_maps())
             return SegformerForSemanticSegmentation(cfg)
         return SegformerForSemanticSegmentation.from_pretrained(
             HF_ID,
-            num_labels=num_classes,
+            config=cfg,
             ignore_mismatched_sizes=True,
-            **label_maps(),
         )
 
     def forward_logits(self, model: nn.Module, images: torch.Tensor) -> torch.Tensor:

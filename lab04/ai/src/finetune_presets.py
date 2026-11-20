@@ -15,7 +15,7 @@ _SEG_BASE = dict(
     render_images=24,  # ile predykcji zapisać jako PNG na split
 
     epochs=25,
-    time_budget_min=90.0,
+    time_budget_min=75.0,
     batch_size=6,
 
     baseline_batch_size=12,
@@ -78,13 +78,11 @@ FT_YOLO11M = {
 _YOLO_SMOKE = {**_SEG_SMOKE, "model_hparams": {"yolo_weights": "yolo11m-seg.pt", "imgsz": 640}}
 
 FINETUNE_ALL: list[dict] = [
-
     # --- SMOKE ---
     {**FT_SEGFORMER_B2, **_SEG_SMOKE},
     {**FT_MASK2FORMER, **_SEG_SMOKE},
     {**FT_UNETPP, **_SEG_SMOKE},
     {**FT_YOLO11M, **_YOLO_SMOKE},
-
     # --- FULL ---
     # {**FT_SEGFORMER_B2},
     # {**FT_MASK2FORMER},

@@ -37,6 +37,8 @@ class LitSegModule(pl.LightningModule):
         self.total_steps = total_steps
         self.train_iou = MulticlassJaccardIndex(NUM_CLASSES, average="none")
         self.val_iou = MulticlassJaccardIndex(NUM_CLASSES, average="none")
+        # HF from_pretrained zostawia backbone w .eval() — bez tego trening nie uczy dropoutów/BN
+        self.model.train()
         self.save_hyperparameters(ignore=["model", "criterion", "adapter"])
 
     def forward(self, x):

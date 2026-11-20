@@ -117,6 +117,8 @@ def run_training(
     os.environ["SEG_PHASE"] = phase
 
     use_gpu = torch.cuda.is_available()
+    if use_gpu:
+        torch.set_float32_matmul_precision("high")
     devices = min(lightning_devices, torch.cuda.device_count()) if use_gpu else 1
     lr = scaled_learning_rate(
         baseline_batch_size=baseline_batch_size,
@@ -209,7 +211,14 @@ def run_training(
         save_weights_only=True,
         save_on_train_epoch_end=True,
     )
-    strategy = DDPStrategy(find_unused_parameters=adapter.ddp_find_unused) if devices > 1 else "auto"
+    strategy = (
+        DDPStrategy(
+            find_unused_parameters=adapter.ddp_find_unused,
+            gradient_as_bucket_view=False,
+        )
+        if devices > 1
+        else "auto"
+    )
     trainer = pl.Trainer(
         max_epochs=epochs,
         max_time=timedelta(minutes=time_budget_min),

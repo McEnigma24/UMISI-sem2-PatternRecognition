@@ -36,17 +36,24 @@ if __name__ == "__main__":
     ensure_masks(active_presets)
     eval_root = resolve_evaluation_dir("main", when)
 
+
+
+
     finetuned = [
         train_and_eval(tensorboard_dir, group="finetuned", preset=p, run_fn=finetune.main, eval_root=eval_root)
         for p in FINETUNE_ALL
     ]
     groups: dict[str, list] = {"finetuned": finetuned}
 
+
     # from_scratch = [
     #     train_and_eval(tensorboard_dir, group="from_scratch", preset=p, run_fn=train.main, eval_root=eval_root)
     #     for p in SCRATCH_ALL
     # ]
     # groups["from_scratch"] = from_scratch
+
+
+
 
     for group, outcomes in groups.items():
         compare_group(eval_root, group, outcomes)

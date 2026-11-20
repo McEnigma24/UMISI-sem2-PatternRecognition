@@ -10,8 +10,6 @@ PID_FILE="${ROOT}/nohup.pid"
 # shellcheck source=_config_/load_config.sh
 source "${ROOT}/_config_/load_config.sh"
 
-DEV_RUN_FILTER="name=${PROJECT_NAME}-dev-run"
-
 _stop_wrapper_pid() {
   local pid="$1"
   if ! kill -0 "${pid}" 2>/dev/null; then
@@ -24,17 +22,6 @@ _stop_wrapper_pid() {
   done
   kill -9 "${pid}" 2>/dev/null || true
   echo "Zatrzymano wrapper (PID ${pid})"
-  return 0
-}
-
-_stop_training_containers() {
-  local -a ids=()
-  mapfile -t ids < <(docker ps -q --filter "${DEV_RUN_FILTER}" 2>/dev/null || true)
-  if [[ ${#ids[@]} -eq 0 ]]; then
-    return 1
-  fi
-  docker kill "${ids[@]}" >/dev/null
-  echo "Zatrzymano kontener(ów) treningu: ${#ids[@]} (${PROJECT_NAME}-dev-run-*)"
   return 0
 }
 
@@ -55,7 +42,7 @@ else
   echo "Brak ${PID_FILE}" >&2
 fi
 
-if _stop_training_containers; then
+if "${ROOT}/scripts/stop_dev_run_containers.sh"; then
   stopped_containers=1
 fi
 
