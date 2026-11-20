@@ -35,4 +35,4 @@ touch "${LOG_FILE}"
 
 trap 'printf "\n"' INT
 
-tail -f "${LOG_FILE}"
+grc tail -f "${LOG_FILE}"

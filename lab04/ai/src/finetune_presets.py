@@ -78,14 +78,16 @@ FT_YOLO11M = {
 _YOLO_SMOKE = {**_SEG_SMOKE, "model_hparams": {"yolo_weights": "yolo11m-seg.pt", "imgsz": 640}}
 
 FINETUNE_ALL: list[dict] = [
+
     # --- SMOKE ---
-    {**FT_SEGFORMER_B2, **_SEG_SMOKE},
-    {**FT_MASK2FORMER, **_SEG_SMOKE},
-    {**FT_UNETPP, **_SEG_SMOKE},
-    {**FT_YOLO11M, **_YOLO_SMOKE},
+    # {**FT_SEGFORMER_B2, **_SEG_SMOKE},
+    # {**FT_MASK2FORMER, **_SEG_SMOKE},
+    # {**FT_UNETPP, **_SEG_SMOKE},
+    # {**FT_YOLO11M, **_YOLO_SMOKE},
+
     # --- FULL ---
-    # {**FT_SEGFORMER_B2},
-    # {**FT_MASK2FORMER},
-    # {**FT_UNETPP},
-    # {**FT_YOLO11M},
+    {**FT_SEGFORMER_B2},
+    {**FT_MASK2FORMER},
+    {**FT_UNETPP},
+    {**FT_YOLO11M},
 ]
