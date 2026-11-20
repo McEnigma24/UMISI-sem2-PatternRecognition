@@ -54,7 +54,13 @@ _SEG_SMOKE = dict(
     log_every_n_steps=1,
 )
 
-FT_SEGFORMER_B2 = {**_SEG_BASE, "architecture": "segformer_b2", "run_tag": "ft-b2", "batch_size": 4}
+FT_SEGFORMER_B2 = {
+    **_SEG_BASE,
+    "architecture": "segformer_b2",
+    "run_tag": "ft-b2",
+    "batch_size": 4
+}
+
 FT_MASK2FORMER = {
     **_SEG_BASE,
     "architecture": "mask2former_swin_t",
@@ -62,7 +68,14 @@ FT_MASK2FORMER = {
     "batch_size": 3,
     "model_hparams": {"aux_dice_focal_weight": 0.5},
 }
-FT_UNETPP = {**_SEG_BASE, "architecture": "unetpp_convnext_t", "run_tag": "ft-unetpp", "batch_size": 6}
+
+FT_UNETPP = {
+    **_SEG_BASE,
+    "architecture": "unetpp_convnext_t",
+    "run_tag": "ft-unetpp",
+    "batch_size": 6
+}
+
 FT_YOLO11M = {
     **_SEG_BASE,
     "architecture": "yolo11m_seg",
@@ -79,13 +92,13 @@ _YOLO_SMOKE = {**_SEG_SMOKE, "model_hparams": {"yolo_weights": "yolo11m-seg.pt",
 
 FINETUNE_ALL: list[dict] = [
 
-    # --- SMOKE ---
+    # --- SMOKE --- #
     # {**FT_SEGFORMER_B2, **_SEG_SMOKE},
     # {**FT_MASK2FORMER, **_SEG_SMOKE},
     # {**FT_UNETPP, **_SEG_SMOKE},
     # {**FT_YOLO11M, **_YOLO_SMOKE},
 
-    # --- FULL ---
+    # --- FULL --- #
     {**FT_SEGFORMER_B2},
     {**FT_MASK2FORMER},
     {**FT_UNETPP},
